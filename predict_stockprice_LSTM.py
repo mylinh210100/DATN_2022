@@ -58,6 +58,8 @@ training_data_len = int(np.ceil( len(dataset) * 0.8 ))
 #print(training_data_len) #1612
 
 # Scale the data
+# From previous experience with deep learning models, we know that we have to scale our data for optimal performance. 
+# In our case, we’ll use Scikit- Learn’s MinMaxScaler and scale our dataset to numbers between zero and one.
 scaler = MinMaxScaler(feature_range=(0,1))
 scaled_data = scaler.fit_transform(dataset)
 print(scaled_data)
