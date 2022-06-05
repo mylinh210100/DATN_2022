@@ -14,7 +14,7 @@ plt.style.use('fivethirtyeight')
 import pandas_datareader as data
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.layers import Dense, LSTM, Dropout
 
 
 df = data.DataReader('TSLA', data_source='yahoo', start ='2014-01-02', end='2022-01-01')
@@ -53,8 +53,8 @@ dataf = df.filter(['Close'])
 # Convert the dataframe to a numpy array
 dataset = dataf.values
 
-# Get the number of rows to train the model on 80%
-training_data_len = int(np.ceil( len(dataset) * 0.8 ))
+# Get the number of rows to train the model on 85%
+training_data_len = int(np.ceil( len(dataset) * 0.85 ))
 #print(training_data_len) #1612
 
 # Scale the data
@@ -85,12 +85,16 @@ x_train, y_train = np.array(x_train), np.array(y_train)
 # Reshape the data
 x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-# Build the LSTM model
+# Build the LSTM model 1st layer
 model = Sequential()
 model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1))) # 50 layer
-model.add(LSTM(50, return_sequences=False))
+"""# 2nd layer
+model.add(LSTM(50, return_sequences=True))
+model.add(Dropout(0.2))"""
+
+# output layer
 model.add(Dense(25)) #25 noron
-model.add(Dense(1))
+model.add(Dense(units=1))
 
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
@@ -99,7 +103,7 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 model.fit(x_train, y_train, batch_size=1, epochs=1)
 
 # Create the testing data set
-# Create a new array containing scaled values from 1552 to 2015
+# Create a new array containing scaled values from  to
 test_data = scaled_data[training_data_len - 60: , :]
 # Create the data sets x_test and y_test
 x_test = []
@@ -127,16 +131,19 @@ valid = dataf[training_data_len:]
 valid['Predictions'] = predictions
 # Visualize the data
 plt.figure(figsize=(16,8))
-plt.title('Model')
+plt.title('Tesla Stock price prediction')
 plt.xlabel('Date', fontsize=18)
-plt.ylabel('Close Price USD ($)', fontsize=18)
+plt.ylabel('Close Price (USD)', fontsize=18)
 plt.plot(train['Close'])
 plt.plot(valid[['Close', 'Predictions']])
-plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
+plt.legend(['Train', 'Real stock price', 'Predictions stock price'], loc='lower right')
 plt.show()
 
 # Show the valid and predicted prices
 print(valid)
+
+
+
 
 """#get the 'close' quote 
 
