@@ -2,10 +2,8 @@ from ast import increment_lineno
 from datetime import datetime
 import imp
 from tkinter import font
-import matplotlib
 import pandas as pd
 import numpy as np
-import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.axes_style('whitegrid')
@@ -17,30 +15,31 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
 
 
-df = data.DataReader('TSLA', data_source='yahoo', start ='2014-01-02', end='2022-01-01')
+df = data.DataReader('TSLA', data_source='yahoo', start ='2014-01-01', end='2021-12-30')
 print(df)
 
-#mo hinh hoa data 'close' day
-"""plt.figure(figsize=(12,6))
+    #mo hinh hoa data 'close' day
+plt.figure(figsize=(12,6))
 plt.title('Close Price History of TSLA')
 plt.plot(df['Close'])
 plt.xlabel('Time', fontsize=18)
 plt.ylabel('Close Price (USD)', fontsize=18)
-plt.show()"""
+plt.show()
 
-#mo hinh hoa data "volume"
-"""plt.figure(figsize=(12,6))
+    #mo hinh hoa data "volume"
+plt.figure(figsize=(12,6))
 plt.title('Sales for Volume of TSLA')
 plt.plot(df['Volume'])
 plt.xlabel('Time', fontsize=18)
 plt.ylabel('Volume', fontsize=18)
-plt.show()"""
+plt.show()
 
-# We'll use pct_change to find the percent change for each day
+"""
+    # We'll use pct_change to find the percent change for each day
 df['Daily return'] = df['Close'].pct_change()
 #print(df['Daily return'])
 
-"""#
+    #mo hinh hoa cot Daily return
 plt.figure(figsize=(12,7))
 plt.title('Daily return of TSLA')
 df['Daily return'].hist(bins=50)
@@ -48,18 +47,18 @@ plt.xlabel('Time', fontsize=18)
 plt.ylabel('Daily return')
 plt.show()
 """
-# Create a new dataframe with only the 'Close column 
+
+    # Tao 1 DF voi chi minh cot Close
 dataf = df.filter(['Close'])
-# Convert the dataframe to a numpy array
+    # Convert DF to a numpy array
 dataset = dataf.values
 
-# Get the number of rows to train the model on 85%
+    # Get the number of rows to train the model on 85%
 training_data_len = int(np.ceil( len(dataset) * 0.85 ))
 #print(training_data_len) #1612
 
-# Scale the data
-# From previous experience with deep learning models, we know that we have to scale our data for optimal performance. 
-# In our case, we’ll use Scikit- Learn’s MinMaxScaler and scale our dataset to numbers between zero and one.
+    # Scale the data 
+    # In our case, we’ll use Scikit- Learn’s MinMaxScaler and scale our dataset to numbers between zero and one.
 scaler = MinMaxScaler(feature_range=(0,1))
 scaled_data = scaler.fit_transform(dataset)
 print(scaled_data)
@@ -88,9 +87,15 @@ x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 # Build the LSTM model 1st layer
 model = Sequential()
 model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1))) # 50 layer
-"""# 2nd layer
+
+
+
+"""
+# 2nd layer
 model.add(LSTM(50, return_sequences=True))
-model.add(Dropout(0.2))"""
+model.add(Dropout(0.2))
+"""
+"""
 
 # output layer
 model.add(Dense(25)) #25 noron
@@ -143,7 +148,7 @@ plt.show()
 print(valid)
 
 
-
+"""
 
 """#get the 'close' quote 
 
