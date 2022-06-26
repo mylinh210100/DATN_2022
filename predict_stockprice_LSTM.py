@@ -161,31 +161,3 @@ plt.show()
     # Show the valid and predicted prices
 #print(valid)
 
-
-
-"""
-#get the 'close' quote 
-
-tesla_quote = data.DataReader('TSLA', data_source='yahoo', start='2022-01-01', end='2022-05-01')
-
-new_df = tesla_quote.filter(['CLose'])
-
-last_60days= new_df[-60:].values
-
-last_60days_scaled = scaler.transform(last_60days)
-
-X_test = []
-
-X_test.append(last_60days_scaled)
-
-X_test = np.array(X_test)
-
-X_test = np.reshape(X_test,(X_test.shape[0], X_test.shape[1], 1))
-
-pred_price = model.predict(X_test)
-
-pred_price = scaler.inverse_transform(pred_price)
-
-print(pred_price)
-
-"""
