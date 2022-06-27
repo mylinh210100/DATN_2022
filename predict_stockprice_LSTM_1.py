@@ -91,25 +91,19 @@ x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
     # Build the LSTM model
 model = Sequential()
     # 1st layer
-model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1))) # 50 neuron
-model.add(Dropout(0.2))
+model.add(LSTM(128, return_sequences=True, input_shape=(x_train.shape[1], 1))) # 50 neuron
     # 2nd layer
-model.add(LSTM(50, return_sequences=True))
-model.add(Dropout(0.2))
-    # 3rd layer
-model.add(LSTM(50, return_sequences= True))
-model.add(Dropout(0.2))
-    # 4th layer
-model.add(LSTM(50))
-model.add(Dropout(0.2))
-    #output layer
+model.add(LSTM(64, return_sequences=False))
+
+    # output layer
+model.add(Dense(25)) #25 noron
 model.add(Dense(1))
 
     # Compile the RNN
 model.compile(optimizer='adam', loss='mean_squared_error')
 
     # Fitting the RNN to Train the model
-model.fit(x_train, y_train, batch_size=50, epochs=50)
+model.fit(x_train, y_train, batch_size=1, epochs=2)
 
     # Create the testing data set
     #Create a new array containing scaled values from  to

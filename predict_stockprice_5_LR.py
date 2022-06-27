@@ -13,7 +13,6 @@ data.insert(7, "Today", dataf)
 #lay ra 2 cot
 df = data[['Date','Today']] 
 
-# Lag la tinh loi suat % cua cac ngay truoc ngay hien tai
 def lag(df, lags):
     names = []
     for i in range(1,lags +1):
@@ -32,20 +31,15 @@ df['Direction'] = [1 if  i > 0 else 0 for i in df['Today']]
 
 name.append('Vol')
 
-
-#print(name)
-#print(df)
-
 x = df[name]
 y = df.Direction
 
 md = sm.Logit(y,x)
 result = md.fit()
-#print(result.summary())
+print(result.summary())
 
 prediction = result.predict(x)
-
-#print(prediction)
+print(prediction)
 
 def confusion_matrix(real, pred):
     predtrans = ['Up' if i > 0.5 else 'Down' for i in pred]
@@ -65,6 +59,7 @@ y_train = df[df.year < 2020]['Direction']
 
 x_test = df[df.year >= 2020][name]
 y_test = df[df.year >= 2020]['Direction']
+
 
 model = sm.Logit(y_train,x_train)
 rs = model.fit()

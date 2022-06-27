@@ -2,11 +2,11 @@ import pandas as pd
 import statsmodels.api as sm
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from matplotlib import pyplot as plt
 
 data = pd.read_csv("\Semester 2, 21-22\DATN\Code\TSLA.csv") # doc file csv
 #print(data)
 
-#loi suat % trong ngay hien tai
 dataf = data['Adj Close'].pct_change() * 100 
 #print(dataf)
 
@@ -21,10 +21,11 @@ def lag(df, lags):
     names = []
     for i in range(1,lags +1):
         df['Lag' + str(i)] = df['Today'].shift(i) 
-       # print(df)
+        print(df)
         names.append('Lag' + str(i))
     return names
 name = lag(df,1) #bien luu ten cua cac cot lag
+
 
 #tinh khoi luong co phieu giao dich
 vol = data.Volume.shift(1).values / 100000000 
@@ -38,6 +39,8 @@ name.append('Vol')
 
 x = df[name]
 y = df.Direction
+#
+print(df)
 
 md = sm.Logit(y,x)
 result = md.fit()
@@ -47,7 +50,6 @@ print(result.summary())
 prediction = result.predict(x)
 
 print(prediction)
-
 
 def confusion_matrix(real, pred):
     predtrans = ['Up' if i > 0.5 else 'Down' for i in pred]
@@ -59,10 +61,12 @@ print(confusion_matrix(y,prediction))
 
 df['year'] = pd.DatetimeIndex(df['Date']).year  
 
-x_train = df[df.year < 2020][name]
-y_train = df[df.year < 2020]['Direction']
-x_test = df[df.year >= 2020][name]
-y_test = df[df.year >= 2020]['Direction']
+x_train = df[df.year < 2019][name]
+y_train = df[df.year < 2019]['Direction']
+
+x_test = df[df.year >= 2019][name]
+y_test = df[df.year >= 2019]['Direction']
+
 
 model = sm.Logit(y_train,x_train)
 rs = model.fit()
