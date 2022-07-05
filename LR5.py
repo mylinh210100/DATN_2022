@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 data = pd.read_csv("\Semester 2, 21-22\DATN\Code\TSLA.csv") # doc file csv
-print(data)
+#print(data)
 
 dataf = np.log(data.Close.pct_change() + 1) 
 #print(dataf)
@@ -23,7 +23,7 @@ def lagit(data, lags):
         names.append('Dr Lag '+str(i))
     return names
 
-dirname = lagit(data, 1)
+dirname = lagit(data, 5)
 data.dropna(inplace=True)
 print(data)
 
@@ -39,6 +39,7 @@ print(np.exp(data[['Return','Probabilities']].sum()))
 
 np.exp(data[['Return','Probabilities']].cumsum()).plot()
 plt.show()
+
 from sklearn.model_selection import train_test_split
 
 train, test = train_test_split(data, shuffle=False, test_size=0.37, random_state=0)
@@ -50,9 +51,8 @@ model = LogisticRegression()
 model.fit(train[dirname], train['Direction'])
 
 test['prediction_Logit'] = model.predict(test[dirname])
-test['probabilities'] = test['prediction_Logit'] * test['Return']
-
 print("predict testing:\n ",test['prediction_Logit'])
+test['probabilities'] = test['prediction_Logit'] * test['Return']
 
 print(np.exp(test[['Return','probabilities']].sum()))
 
@@ -64,3 +64,4 @@ from sklearn import metrics
 print("Confusion matrix: \n",metrics.confusion_matrix(test['Direction'], test['prediction_Logit']))
 
 print("Ket qua danh gia: \n", metrics.classification_report(test['Direction'], test['prediction_Logit']))
+

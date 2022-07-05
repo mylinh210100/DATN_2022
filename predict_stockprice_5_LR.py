@@ -1,7 +1,7 @@
 import pandas as pd
 import statsmodels.api as sm
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+
 
 data = pd.read_csv("\Semester 2, 21-22\DATN\Code\TSLA.csv") # doc file csv
 #loi suat % trong ngay hien tai
@@ -36,10 +36,10 @@ y = df.Direction
 
 md = sm.Logit(y,x)
 result = md.fit()
-print(result.summary())
+#print(result.summary())
 
 prediction = result.predict(x)
-print(prediction)
+#print(prediction)
 
 def confusion_matrix(real, pred):
     predtrans = ['Up' if i > 0.5 else 'Down' for i in pred]
@@ -47,7 +47,7 @@ def confusion_matrix(real, pred):
     confusion_matrix = pd.crosstab(pd.Series(rl),pd.Series(predtrans), rownames=['Real'],colnames=['Predicted'])
     return confusion_matrix
 
-#print(confusion_matrix(y,prediction))
+print(confusion_matrix(y,prediction))
 
 df['year'] = pd.DatetimeIndex(df['Date']).year  
 
@@ -63,8 +63,11 @@ y_test = df[df.year >= 2020]['Direction']
 
 model = sm.Logit(y_train,x_train)
 rs = model.fit()
+print(rs.summary())
 
 predictions = rs.predict(x_test)
+print("Prediction: ", predictions)
+
 print(confusion_matrix(y_test, predictions))
 
 

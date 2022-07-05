@@ -18,7 +18,7 @@ from keras.layers import Dense, LSTM, Dropout
 df = data.DataReader('TSLA', data_source='yahoo', start ='2014-01-01', end='2021-12-30')
 print(df)
 
-"""
+
     #mo hinh hoa data 'close' day
 plt.figure(figsize=(12,6))
 plt.title('Close Price History of TSLA')
@@ -47,7 +47,7 @@ df['Daily return'].hist(bins=50)
 plt.xlabel('Time', fontsize=18)
 plt.ylabel('Daily return')
 plt.show()
-"""
+
 
     # Tao 1 DF voi chi minh cot Close
 dataf = df.filter(['Close'])
@@ -79,7 +79,6 @@ for i in range(60, len(train_data)):
         print(x_train)
         print(y_train)
         print()
-
     # Convert the x_train and y_train to numpy arrays 
 x_train, y_train = np.array(x_train), np.array(y_train)
 
@@ -134,7 +133,7 @@ predictions = scaler.inverse_transform(predictions)
 
     # Get the root mean squared error (RMSE) loi trung binh binh phuong goc
 rmse = np.sqrt(np.mean(((predictions - y_test) ** 2)))
-print(rmse)
+print("RMES = ",rmse)
 
     # Plot the data - ve du lieu
 train = dataf[:training_data_len]

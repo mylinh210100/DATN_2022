@@ -1,8 +1,7 @@
 import pandas as pd
 import statsmodels.api as sm
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from matplotlib import pyplot as plt
+
 
 data = pd.read_csv("\Semester 2, 21-22\DATN\Code\TSLA.csv") # doc file csv
 #print(data)
@@ -14,9 +13,10 @@ dataf = data['Adj Close'].pct_change() * 100
 data.insert(7, "Today", dataf) 
 
 #lay ra 2 cot
-df = data[['Date','Today']] 
+df = data[['Date','Today']]
 
-# Lag la tinh loi suat % cua cac ngay truoc ngay hien tai
+# Lag la i suat loi nhuan % cua cac ngay truoc ngay hien tai
+# dung shift de dich chuyen cac chi muc ti suat loi nhuan vua tinh dc
 def lag(df, lags):
     names = []
     for i in range(1,lags +1):
@@ -35,21 +35,20 @@ df.insert(2, "Vol", vol)
 # xac dinh chieu tang giam cua co phieu
 df = df.dropna() #loai bo cac dong co du lieu trong ra khoi bang
 df['Direction'] = [1 if  i > 0 else 0 for i in df['Today']] 
-name.append('Vol')
+#name.append('Vol')
 
 x = df[name]
 y = df.Direction
-#
-print(df)
+#print(df)
 
 md = sm.Logit(y,x)
 result = md.fit()
 
-print(result.summary())
+#print(result.summary())
 
 prediction = result.predict(x)
 
-print(prediction)
+#print(prediction)
 
 def confusion_matrix(real, pred):
     predtrans = ['Up' if i > 0.5 else 'Down' for i in pred]
@@ -57,10 +56,11 @@ def confusion_matrix(real, pred):
     confusion_matrix = pd.crosstab(pd.Series(rl),pd.Series(predtrans), rownames=['Real'],colnames=['Predicted'])
     return confusion_matrix
 
-print(confusion_matrix(y,prediction))
+#print(confusion_matrix(y,prediction))
 
 df['year'] = pd.DatetimeIndex(df['Date']).year  
 
+print("Name = ", name)
 x_train = df[df.year < 2019][name]
 y_train = df[df.year < 2019]['Direction']
 
@@ -70,8 +70,9 @@ y_test = df[df.year >= 2019]['Direction']
 
 model = sm.Logit(y_train,x_train)
 rs = model.fit()
-
+print(rs.summary())
 predictions = rs.predict(x_test)
+print("Prediction: ", predictions)
 
 print(confusion_matrix(y_test, predictions))
 
